@@ -64,4 +64,58 @@ public class ClimateUtil {
         return commandResult.getResponse().getResult();
     }
 
+    /**
+     * Open or close some seat heater
+     * Note: Must call startAutoConditioning method before, and then call this method, or it will not take effect
+     *
+     * @param accessToken
+     * @param vehicleId
+     * @param heater      0-Front_Left  1-Front_Right  2-Rear_Left  4-Rear_Center  5-Rear_Right
+     * @param level       From 0(Contains) To 3(Contains)
+     * @return
+     */
+    public static Boolean setSeatHeater(String accessToken, Long vehicleId, Integer heater, Integer level) {
+        Map<String, String> header = new HashMap<>();
+        header.put("authorization", "Bearer " + accessToken);
+        JSONObject params = new JSONObject();
+        params.put("heater", heater);
+        params.put("level", level);
+        Response response = OkHttpUtil.getInstance()
+                .postJson(String.format(UrlConsts.COMMAND, vehicleId, "remote_seat_heater_request"),
+                        params, header);
+        CommandResult commandResult = null;
+        try {
+            commandResult = JSONObject.parseObject(response.body().string(), CommandResult.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return commandResult.getResponse().getResult();
+    }
+
+    /**
+     * Open or close steering wheel heater
+     * Note: Must call startAutoConditioning method before, and then call this method, or it will not take effect
+     *
+     * @param accessToken
+     * @param vehicleId
+     * @param isOn        True or False
+     * @return
+     */
+    public static Boolean setWheelHeater(String accessToken, Long vehicleId, boolean isOn) {
+        Map<String, String> header = new HashMap<>();
+        header.put("authorization", "Bearer " + accessToken);
+        JSONObject params = new JSONObject();
+        params.put("on", isOn);
+        Response response = OkHttpUtil.getInstance()
+                .postJson(String.format(UrlConsts.COMMAND, vehicleId, "remote_steering_wheel_heater_request"),
+                        params, header);
+        CommandResult commandResult = null;
+        try {
+            commandResult = JSONObject.parseObject(response.body().string(), CommandResult.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return commandResult.getResponse().getResult();
+    }
+
 }
