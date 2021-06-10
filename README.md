@@ -5,7 +5,7 @@ This is a java sdk for tesla api, so you can monitor and control the tesla cars 
 
 The most important question you may focus on:
 1. Is Official? No, there has no official api on the world yet. All the api is discoveried by hack the tesla official 
-   mobile app
+   mobile app.
 2. Is Password Safe? **YES**, if you read the source code you will see there is no middle-server to track your 
    information, include email and password. The logic of program is only perform HTTP request to tesla official 
    web interface, like tesla.com, tesla.cn and teslamotors.com, which is used in tesla official mobile app. So feel 
@@ -29,7 +29,7 @@ Here's a quick example:
 ```java
 public class Main {
 
-   public static void main(String[] args) {//
+   public static void main(String[] args) {
       String accessToken = AuthUtil.login("your email", "your password");
 
       Long vehicleId = VehicleUtil.getFirstVehicleId(accessToken);

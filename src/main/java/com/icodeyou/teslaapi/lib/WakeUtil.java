@@ -20,7 +20,7 @@ public class WakeUtil {
         header.put("authorization", "Bearer " + accessToken);
         int retryCount = 0;
         boolean wakeUpSuccess = false;
-        while (!wakeUpSuccess && retryCount < 8) {
+        while (!wakeUpSuccess && retryCount < 20) {
             Response response = OkHttpUtil.getInstance().postJson(
                     String.format("https://owner-api.teslamotors.com/api/1/vehicles/%s/wake_up", vehicleId),
                     null, header);
