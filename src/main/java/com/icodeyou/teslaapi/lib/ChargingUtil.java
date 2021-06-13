@@ -16,6 +16,12 @@ import okhttp3.Response;
 
 public class ChargingUtil {
 
+    /**
+     * Open charge port door
+     * @param accessToken
+     * @param vehicleId
+     * @return
+     */
     public static Boolean openChargePortDoor(String accessToken, Long vehicleId) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);
@@ -31,6 +37,12 @@ public class ChargingUtil {
         return commandResult.getResponse().getResult();
     }
 
+    /**
+     * Close charge port door
+     * @param accessToken
+     * @param vehicleId
+     * @return
+     */
     public static Boolean closeChargePortDoor(String accessToken, Long vehicleId) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);
@@ -46,6 +58,13 @@ public class ChargingUtil {
         return commandResult.getResponse().getResult();
     }
 
+    /**
+     * Set charge limit, as a percentage
+     * @param accessToken
+     * @param vehicleId
+     * @param limit
+     * @return
+     */
     public static Boolean setChargeLimit(String accessToken, Long vehicleId, Integer limit) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);

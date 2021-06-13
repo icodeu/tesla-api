@@ -16,6 +16,12 @@ import okhttp3.Response;
 
 public class StateUtil {
 
+    /**
+     * Get the current climate state, including temperature in the car, and so on.
+     * @param accessToken
+     * @param vehicleId
+     * @return
+     */
     public static ClimateState getClimateState(String accessToken, Long vehicleId) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);

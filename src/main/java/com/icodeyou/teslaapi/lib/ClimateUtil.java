@@ -16,6 +16,12 @@ import okhttp3.Response;
 
 public class ClimateUtil {
 
+    /**
+     * Start the air conditioner, make it work.
+     * @param accessToken
+     * @param vehicleId
+     * @return
+     */
     public static Boolean startAutoConditioning(String accessToken, Long vehicleId) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);
@@ -31,6 +37,12 @@ public class ClimateUtil {
         return commandResult.getResponse().getResult();
     }
 
+    /**
+     * Stop the air conditioner, make it stop.
+     * @param accessToken
+     * @param vehicleId
+     * @return
+     */
     public static Boolean stopAutoConditioning(String accessToken, Long vehicleId) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);
@@ -46,6 +58,13 @@ public class ClimateUtil {
         return commandResult.getResponse().getResult();
     }
 
+    /**
+     * Set temperature of driver and passenger, but please note call startAutoConditioning method later to make air
+     * conditioner work, or it may be not work.
+     * @param accessToken
+     * @param vehicleId
+     * @return
+     */
     public static Boolean setTemperature(String accessToken, Long vehicleId, Integer temperature) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);

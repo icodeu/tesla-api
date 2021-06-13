@@ -31,7 +31,7 @@ public class AuthUtil {
      * @return access token
      */
     public static String login(String email, String password) {
-        // Step 1 Generate code verifier and code_challenge
+        // Step 1 Generate code verifier and code challenge
         String codeVerifier = RandomStringUtils.randomAlphanumeric(86);
         String codeChallenge = null;
         try {
@@ -106,7 +106,7 @@ public class AuthUtil {
         }
         EnsureUtil.notEmpty(bearAccessToken, "Error when get bear access token");
 
-        // Step 5 Exchange the bear access token to real access token
+        // Step 5 Exchange the bearer access token to real access token
         JSONObject realTokenParams = new JSONObject();
         realTokenParams.put("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer");
         realTokenParams.put("client_id", "81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384");

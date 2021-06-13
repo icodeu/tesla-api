@@ -16,6 +16,11 @@ import okhttp3.Response;
 
 public class VehicleUtil {
 
+    /**
+     * Get all vehicles belonging to the account.
+     * @param accessToken
+     * @return vehicle list
+     */
     public static List<VehicleList.Vehicle> getVehicles(String accessToken) {
         VehicleList vehicles = null;
 
@@ -31,6 +36,11 @@ public class VehicleUtil {
         return vehicles.getResponse();
     }
 
+    /**
+     * Get the first vehicle belonging to the account.
+     * @param accessToken
+     * @return the first vehicle
+     */
     public static Long getFirstVehicleId(String accessToken) {
         List<VehicleList.Vehicle> vehicles = getVehicles(accessToken);
         return vehicles.get(0).getId();

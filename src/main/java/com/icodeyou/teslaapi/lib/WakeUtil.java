@@ -15,6 +15,12 @@ import okhttp3.Response;
 
 public class WakeUtil {
 
+    /**
+     * Wake up the vehicle from sleep mode by sending a sms to the car
+     * @param accessToken
+     * @param vehicleId
+     * @return True - Wake up success, False - Wake up fail
+     */
     public static Boolean wakeUp(String accessToken, Long vehicleId) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);

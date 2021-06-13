@@ -16,6 +16,14 @@ import okhttp3.Response;
 
 public class TrunkUtil {
 
+    /**
+     * Open or close the trunk. Please note the rear trunk can be open or close, but the front trunk can be open
+     * only, if close, you must press it in front of your car.
+     * @param accessToken
+     * @param vehicleId
+     * @param whichTrunk front or rear
+     * @return
+     */
     public static Boolean actuateTrunk(String accessToken, Long vehicleId, String whichTrunk) {
         Map<String, String> header = new HashMap<>();
         header.put("authorization", "Bearer " + accessToken);
