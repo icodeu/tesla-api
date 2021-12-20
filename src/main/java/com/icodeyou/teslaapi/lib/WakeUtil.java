@@ -3,15 +3,14 @@
  */
 package com.icodeyou.teslaapi.lib;
 
+import com.alibaba.fastjson.JSONObject;
+import com.icodeyou.teslaapi.model.WakeUp;
+import com.icodeyou.teslaapi.util.OkHttpUtil;
+import okhttp3.Response;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.alibaba.fastjson.JSONObject;
-import com.icodeyou.teslaapi.util.OkHttpUtil;
-import com.icodeyou.teslaapi.model.WakeUp;
-
-import okhttp3.Response;
 
 public class WakeUtil {
 
@@ -26,7 +25,7 @@ public class WakeUtil {
         header.put("authorization", "Bearer " + accessToken);
         int retryCount = 0;
         boolean wakeUpSuccess = false;
-        while (!wakeUpSuccess && retryCount < 20) {
+        while (!wakeUpSuccess && retryCount < 60) {
             Response response = OkHttpUtil.getInstance().postJson(
                     String.format("https://owner-api.teslamotors.com/api/1/vehicles/%s/wake_up", vehicleId),
                     null, header);

@@ -3,6 +3,14 @@
  */
 package com.icodeyou.teslaapi.lib;
 
+import com.alibaba.fastjson.JSONObject;
+import com.icodeyou.teslaapi.util.EnsureUtil;
+import com.icodeyou.teslaapi.util.OkHttpUtil;
+import okhttp3.Response;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -11,16 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang3.RandomStringUtils;
-
-import com.alibaba.fastjson.JSONObject;
-import com.icodeyou.teslaapi.util.OkHttpUtil;
-import com.icodeyou.teslaapi.util.EnsureUtil;
-
-import okhttp3.Response;
 
 public class AuthUtil {
 
@@ -52,8 +50,10 @@ public class AuthUtil {
         urlParams.put("response_type", "code");
         urlParams.put("scope", "openid email offline_access");
         urlParams.put("state", RandomStringUtils.randomAlphanumeric(20));
-        urlParams.put("login_hint", email);
-        Response loginResponse = OkHttpUtil.getInstance().get("https://auth.tesla.com/oauth2/v3/authorize", urlParams);
+        urlParams.put("locale", "zh-CN");
+        urlParams.put("prompt", "login");
+        urlParams.put("audience", "null");
+        Response loginResponse = OkHttpUtil.getInstance().get("https://auth.tesla.cn/oauth2/v3/authorize", urlParams);
         String loginResponseHtml = null;
         StringBuilder cookiesBuilder = new StringBuilder();
         try {
@@ -79,14 +79,39 @@ public class AuthUtil {
         Map<String, String> postParams = new HashMap<>();
         postParams.put("identity", email);
         postParams.put("credential", password);
-        inputMap.entrySet().forEach(entry -> postParams.put(entry.getKey(), entry.getValue()));
+        postParams.putAll(inputMap);
         Map<String, String> cookieHeader = new HashMap<String, String>() {{
             put("Cookie", cookiesBuilder.toString());
         }};
         loginResponse = OkHttpUtil.getInstance()
                 .postForm("https://auth.tesla.cn/oauth2/v3/authorize", urlParams, postParams, cookieHeader);
-        // 302 Redirect, so get the code from prior response
-        String code = loginResponse.priorResponse().request().url().queryParameter("code");
+
+        // Request login html again
+        try {
+            loginResponseHtml = loginResponse.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        EnsureUtil.notEmpty(loginResponseHtml, "Error when get login html");
+
+        inputNameList = regMatch(loginResponseHtml, "input type", "name");
+        inputValueList = regMatch(loginResponseHtml, "input type", "value");
+        inputMap = new HashMap<>();
+        for (int i = 0; i < inputNameList.size(); i++) {
+            inputMap.put(inputNameList.get(i), inputValueList.get(i));
+        }
+
+        // Step 3 Login with email and password
+        postParams = new HashMap<>();
+        postParams.put("identity", email);
+        postParams.put("credential", password);
+        postParams.put("privacy_consent", "1");
+        postParams.putAll(inputMap);
+        loginResponse = OkHttpUtil.getInstance()
+                .postForm("https://auth.tesla.cn/oauth2/v3/authorize", urlParams, postParams, cookieHeader);
+
+        // 302 Redirect(But indeed it is 404), so get the code from prior response
+        String code = loginResponse.request().url().queryParameter("code");
         EnsureUtil.notEmpty(code, "Error when get code");
 
         // Step 4 Get bear access token by code above
