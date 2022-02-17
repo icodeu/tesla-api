@@ -3,16 +3,16 @@
  */
 package com.icodeyou.teslaapi.lib;
 
+import com.alibaba.fastjson.JSONObject;
+import com.icodeyou.teslaapi.consts.UrlConsts;
+import com.icodeyou.teslaapi.model.ChargeState;
+import com.icodeyou.teslaapi.model.ClimateState;
+import com.icodeyou.teslaapi.util.OkHttpUtil;
+import okhttp3.Response;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.alibaba.fastjson.JSONObject;
-import com.icodeyou.teslaapi.consts.UrlConsts;
-import com.icodeyou.teslaapi.model.ClimateState;
-import com.icodeyou.teslaapi.util.OkHttpUtil;
-
-import okhttp3.Response;
 
 public class StateUtil {
 
@@ -35,6 +35,27 @@ public class StateUtil {
             e.printStackTrace();
         }
         return climateState;
+    }
+
+    /**
+     * Get the current charge state
+     * @param accessToken
+     * @param vehicleId
+     * @return
+     */
+    public static ChargeState getChargeState(String accessToken, Long vehicleId) {
+        Map<String, String> header = new HashMap<>();
+        header.put("authorization", "Bearer " + accessToken);
+        Response response = OkHttpUtil.getInstance()
+                .get(String.format(UrlConsts.STATE, vehicleId, "charge_state"),
+                        null, header);
+        ChargeState chargeState = null;
+        try {
+            chargeState = JSONObject.parseObject(response.body().string(), ChargeState.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return chargeState;
     }
 
 }
